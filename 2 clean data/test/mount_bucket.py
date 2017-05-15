@@ -1,7 +1,7 @@
 import os
 import time
 
-buckets = ['cs231n-satellite-images', 'cs231n-satellite-images-cleaned', 'cs231n-satellite-images-hist']
+buckets = ['cs231n-satellite-images', 'cs231n-satellite-images-cleaned', 'cs231n-satellite-images-hist', 'cs231n-satellite-images-models']
 
 for bucket in buckets:
     bucketPath = os.path.expanduser('~/' + bucket)
