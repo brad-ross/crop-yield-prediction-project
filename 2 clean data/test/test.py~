@@ -1,0 +1,5 @@
+import mount_bucket
+import bucket_util as bu
+
+bu.setBucketLocation('~/bucket')
+bu.walk('data','temperature')
