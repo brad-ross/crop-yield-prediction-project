@@ -82,6 +82,3 @@ INFO:root:predict year 2013 step 18 7434.023438 40833.324219 0.001000
 INFO:root:Validation set RMSE 49.580688 ME 47.122868 RMSE_min 12.510947
 INFO:root:predict year 2013 step 19 11136.771484 44659.914062 0.001000
 INFO:root:save in file: models/2013CNN_model.ckpt
-WARNING:tensorflow:From train_for_hist_alldata_mod.py:70: initialize_all_variables (from tensorflow.python.ops.variables) is deprecated and will be removed after 2017-03-02.
-Instructions for updating:
-Use `tf.global_variables_initializer` instead.

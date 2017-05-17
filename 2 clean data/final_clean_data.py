@@ -223,15 +223,16 @@ def preprocess_save_data_parallel(file):
             MODIS_img = np.transpose(np.array(gdal.Open(MODIS_path).ReadAsArray(), dtype='uint16'),axes=(1,2,0))
         except ValueError as msg:
             print msg
+        # WE UNCOMMENTED THIS!!!
         # read temperature
         MODIS_temperature_img = np.transpose(np.array(gdal.Open(MODIS_temperature_path).ReadAsArray(), dtype='uint16'),axes=(1,2,0))
         # shift
-        # MODIS_temperature_img = MODIS_temperature_img-12000
+        MODIS_temperature_img = MODIS_temperature_img-12000
         # scale
-        # MODIS_temperature_img = MODIS_temperature_img*1.25
+        MODIS_temperature_img = MODIS_temperature_img*1.25
         # clean
-        # MODIS_temperature_img[MODIS_temperature_img<0]=0
-        # MODIS_temperature_img[MODIS_temperature_img>5000]=5000
+        MODIS_temperature_img[MODIS_temperature_img<0]=0
+        MODIS_temperature_img[MODIS_temperature_img>5000]=5000
         # read mask
         MODIS_mask_img = np.transpose(np.array(gdal.Open(MODIS_mask_path).ReadAsArray(), dtype='uint16'),axes=(1,2,0))
         # Non-crop = 0, crop = 1

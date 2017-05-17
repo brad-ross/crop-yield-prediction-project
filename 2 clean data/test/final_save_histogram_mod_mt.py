@@ -17,7 +17,7 @@ class fetch_data():
         #bu.setBucketLocation('~/cs231n-satellite-images-cleaned')
         # self.dir = '/atlas/u/jiaxuan/data/MODIS_data/MODIS_data'
         #self.dir = "/atlas/u/jiaxuan/data/google_drive/img_output/"
-        self.dir = os.path.expanduser('~/cs231n-satellite-images-cleaned') + '/data_output_full_'
+        self.dir = os.path.expanduser('~/cs231n-satellite-images-clean') + '/data_output_full_'
         self.outputdir = os.path.expanduser('~/cs231n-satellite-images-hist') + '/data_output_full_'
         # self.dir = "/atlas/u/jiaxuan/data/google_drive/img_full_output/"
         # self.dir = 'C:\\0machine_learning\\MODIS_data\\'
@@ -214,7 +214,7 @@ class fetch_data():
         output_index = np.zeros([self.index_all.shape[0],2])
 
         for i in self.index_all:
-            if i % 1000 == 0:
+            if i % 2000 == 0:
                 print "Saving snapshot!"
                 np.savez(self.outputdir+'histogram_all_full_snapshot_%d.npz' % i,
                          output_image=output_image,output_yield=output_yield,
@@ -228,7 +228,9 @@ class fetch_data():
             longitude = self.locations[index,2]
             latitude = self.locations[index,3]
 
+            print datetime.datetime.now()
             filename = year + '_' + loc1 + '_' + loc2 + '.npy'
+            print "Examining file: %s!" % filename
             try:
                 image_temp = np.load(self.dir + filename) # ?
                 image_temp = self.filter_timespan(image_temp, 49, 305, 9) # ?
@@ -238,9 +240,9 @@ class fetch_data():
                 bin_seq = np.linspace(1, 4999, 33)
                 image_temp = self.calc_histogram(image_temp, bin_seq ,32, 32, 9) # ?
                 image_temp[np.isnan(image_temp)] = 0
-                # if np.sum(image_temp) < 250:
-                #     print 'broken image', filename
-                #     print np.isnan(image_temp)
+                if np.sum(image_temp) < 250:
+                    print 'broken image', filename
+                    print np.isnan(image_temp)
 
                 output_image[i, :] = image_temp
                 output_yield[i] = self.data_yield[i, 3]

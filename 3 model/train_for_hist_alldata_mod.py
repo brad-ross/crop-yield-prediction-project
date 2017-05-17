@@ -1,7 +1,7 @@
 from nnet_for_hist_dropout_stride import *
 from GP_crop_v3 import *
 import logging
-import os
+
 
 
 if __name__ == "__main__":
@@ -9,9 +9,9 @@ if __name__ == "__main__":
     logging.basicConfig(filename='train_for_hist_alldata'+str(predict_year)+'.log',level=logging.DEBUG)
     # Create a coordinator
     config = Config()
-    config.save_path = os.path.expanduser('~/cs231n-satellite-images-models/')
+    config.save_path = 'models/'
     # load data to memory
-    filename = os.path.expanduser('~/cs231n-satellite-images-hist/histogram_all' + '.npz')
+    filename = 'histogram_all' + '.npz'
     # filename = 'histogram_all_soilweather' + '.npz'
     #content = np.load(config.load_path + filename)
     content = np.load(filename)
@@ -24,9 +24,6 @@ if __name__ == "__main__":
 
      # delete broken image
     list_delete=[]
-    print "Here's the image_all shape"
-    print image_all.shape
-    exit()
     for i in range(image_all.shape[0]):
         #print np.sum(image_all[i,:,:,:])
         #if np.sum(image_all[i,:,:,:])<=287:
@@ -68,7 +65,7 @@ if __name__ == "__main__":
 
     gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.22)
     # Launch the graph.
-    sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options, log_device_placement=True))
+    sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options))
     sess.run(tf.initialize_all_variables())
 
     summary_train_loss = []
