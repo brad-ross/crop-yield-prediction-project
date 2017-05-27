@@ -9,7 +9,7 @@ if __name__ == "__main__":
 
     # Create a coordinator
     config = Config()
-    RUN_NAME = "run1__dropout-0.50" # DON'T FORGET TO CHANGE THIS!!!
+    RUN_NAME = "run1__dropout-0.50/" # DON'T FORGET TO CHANGE THIS!!!
     config.save_path = os.path.expanduser('~/cs231n-satellite-images-models/' + RUN_NAME)
 
     # load data to memory
