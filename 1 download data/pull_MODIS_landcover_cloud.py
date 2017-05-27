@@ -1,11 +1,6 @@
 import ee
 import time
-import sys
-import numpy as np
 import pandas as pd
-import itertools
-import os
-import urllib
 
 ee.Initialize()
 
@@ -23,10 +18,7 @@ def export_oneimage(img,folder,name,scale,crs):
     time.sleep(10)
   print 'Done.', task.status()
 
-
-
 locations = pd.read_csv('locations_final.csv',header=None)
-
 
 # Transforms an Image Collection with 1 band per Image into a single Image with items as bands
 # Author: Jamie Vleeshouwer
@@ -48,15 +40,6 @@ imgcoll = ee.ImageCollection('MODIS/051/MCD12Q1') \
 img=imgcoll.iterate(appendBand)
 img=ee.Image(img)
 
-# img_0=ee.Image(ee.Number(0))
-# img_5000=ee.Image(ee.Number(5000))
-#
-# img=img.min(img_5000)
-# img=img.max(img_0)
-
-# img=ee.Image(ee.Number(100))
-# img=ee.ImageCollection('LC8_L1T').mosaic()
-
 for loc1, loc2, lat, lon in locations.values:
     fname = '{}_{}'.format(int(loc1), int(loc2))
 
@@ -69,24 +52,12 @@ for loc1, loc2, lat, lon in locations.values:
     region = ee.FeatureCollection(region).filterMetadata('CntyFips', 'equals', int(loc2))
     region = ee.Feature(region.first())
 
-    # region = str([
-    #     [lat - offset, lon + offset],
-    #     [lat + offset, lon + offset],
-    #     [lat + offset, lon - offset],
-    #     [lat - offset, lon - offset]])
     while True:
         try:
             export_oneimage(img.clip(region), 'data_mask', fname, scale, crs)
-        except:
+        except Exception as e:
+            print e
             print 'retry'
             time.sleep(10)
             continue
         break
-    # while True:
-    #     try:
-    #         export_oneimage(img,'Data_test',fname,region,scale,crs)
-    #     except:
-    #         print 'retry'
-    #         time.sleep(10)
-    #         continue
-    #     break
