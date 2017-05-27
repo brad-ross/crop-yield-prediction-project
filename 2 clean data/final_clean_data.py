@@ -10,6 +10,9 @@ from scipy.ndimage import zoom
 from joblib import Parallel, delayed
 import multiprocessing
 
+import datetime
+
+import bucket_util as bu
 
 ################
 # Data range
@@ -21,7 +24,7 @@ import multiprocessing
 
 ################
 
-
+# LATER
 def check_data_integrity_del():
     data = np.genfromtxt('yield_final_highquality.csv', delimiter=',')
     # check if they have related files
@@ -40,6 +43,7 @@ def check_data_integrity_del():
     data_clean=np.delete(data, list_del, axis=0)
     np.savetxt("yield_final_highquality.csv", data_clean, delimiter=",")
 
+# LATER
 def check_data_integrity():
     print 'begin'
     data = np.genfromtxt('yield_final_highquality.csv', delimiter=',')
@@ -68,6 +72,7 @@ def check_data_integrity():
 #     print 'done',idx
 #     print data.values.shape[0]
 
+# OK
 def divide_image(img,first,step,num):
     image_list=[]
     for i in range(0,num-1):
@@ -76,11 +81,13 @@ def divide_image(img,first,step,num):
     image_list.append(img[:, :, first:])
     return image_list
 
+# OK
 def extend_mask(img,num):
     for i in range(0,num):
         img = np.concatenate((img, img[:,:,-2:-1]),axis=2)
     return img
 
+# OK
 # very dirty... but should work
 def merge_image(MODIS_img_list,MODIS_temperature_img_list):
     MODIS_list=[]
@@ -96,7 +103,7 @@ def merge_image(MODIS_img_list,MODIS_temperature_img_list):
         MODIS_list.append(merge)
     return MODIS_list
 
-
+# OK
 def mask_image(MODIS_list,MODIS_mask_img_list):
     MODIS_list_masked = []
     for i in range(0, len(MODIS_list)):
@@ -105,12 +112,14 @@ def mask_image(MODIS_list,MODIS_mask_img_list):
         MODIS_list_masked.append(masked_img)
     return MODIS_list_masked
 
+# OK
 def quality_dector(image_temp):
         filter_0=image_temp>0
         filter_5000=image_temp<5000
         filter=filter_0*filter_5000
         return float(np.count_nonzero(filter))/image_temp.size
 
+# NOT NEEDED
 def preprocess_save_data():
 
     MODIS_dir="/atlas/u/jiaxuan/data/google_drive/data_image"
@@ -188,32 +197,30 @@ def preprocess_save_data():
                         print filename,':written ',str(count)
                         count+=1
 
-def preprocess_save_data_parallel(file):
-
+def preprocess_save_data_parallel(fileInfo):
+    prefix, datatype, file = fileInfo # Unpack the tuple
+    '''
     MODIS_dir="/atlas/u/jiaxuan/data/google_drive/data_image_full"
     MODIS_temperature_dir="/atlas/u/jiaxuan/data/google_drive/data_temperature"
     MODIS_mask_dir="/atlas/u/jiaxuan/data/google_drive/data_mask"
 
     img_output_dir="/atlas/u/jiaxuan/data/google_drive/img_full_output/"
     img_zoom_output_dir="/atlas/u/jiaxuan/data/google_drive/img_zoom_full_output/"
-
-    # MODIS_processed_dir="C:/360Downloads/6_Data_county_processed_scaled/"
-
-    # MODIS_dir="/atlas/u/jiaxuan/data/MODIS_data_county/3_Data_county"
-    # MODIS_temperature_dir="/atlas/u/jiaxuan/data/MODIS_data_county_temperature"
-    # MODIS_mask_dir="/atlas/u/jiaxuan/data/MODIS_data_county_mask"
-    # MODIS_processed_dir="/atlas/u/jiaxuan/data/MODIS_data_county_processed_compressed/"
-
+    '''
     data_yield = np.genfromtxt('yield_final.csv', delimiter=',', dtype=float)
     if file.endswith(".tif"):
-        MODIS_path=os.path.join(MODIS_dir, file)
+        #MODIS_path=os.path.join(MODIS_dir, file)
         # check file size to see if it's broken
         # if os.path.getsize(MODIS_path) < 10000000:
         #     print 'file broken, continue'
         #     continue
-        MODIS_temperature_path=os.path.join(MODIS_temperature_dir,file)
-        MODIS_mask_path=os.path.join(MODIS_mask_dir,file)
+        #MODIS_temperature_path=os.path.join(MODIS_temperature_dir,file)
+        #MODIS_mask_path=os.path.join(MODIS_mask_dir,file)
 
+        MODIS_path = bu.getFullPath(fileInfo)
+        MODIS_temperature_path = bu.getFullPath(bu.replaceDatatype(fileInfo, 'temperature'))
+        MODIS_mask_path = bu.getFullPath(bu.replaceDatatype(fileInfo, 'mask'))
+        
         # get geo location
         raw = file.replace('_',' ').replace('.',' ').split()
         loc1 = int(raw[0])
@@ -223,7 +230,6 @@ def preprocess_save_data_parallel(file):
             MODIS_img = np.transpose(np.array(gdal.Open(MODIS_path).ReadAsArray(), dtype='uint16'),axes=(1,2,0))
         except ValueError as msg:
             print msg
-        # WE UNCOMMENTED THIS!!!
         # read temperature
         MODIS_temperature_img = np.transpose(np.array(gdal.Open(MODIS_temperature_path).ReadAsArray(), dtype='uint16'),axes=(1,2,0))
         # shift
@@ -233,6 +239,7 @@ def preprocess_save_data_parallel(file):
         # clean
         MODIS_temperature_img[MODIS_temperature_img<0]=0
         MODIS_temperature_img[MODIS_temperature_img>5000]=5000
+
         # read mask
         MODIS_mask_img = np.transpose(np.array(gdal.Open(MODIS_mask_path).ReadAsArray(), dtype='uint16'),axes=(1,2,0))
         # Non-crop = 0, crop = 1
@@ -253,47 +260,39 @@ def preprocess_save_data_parallel(file):
 
         # check if the result is in the list
         year_start = 2003
+        bu.setBucketLocation('~/cs231n-satellite-images-clean')
         for i in range(0, 14):
             year = i+year_start
             key = np.array([year,loc1,loc2])
             if np.sum(np.all(data_yield[:,0:3] == key, axis=1))>0:
-                # # detect quality
-                # quality = quality_dector(MODIS_list_masked[i])
-                # if quality < 0.01:
-                #     print 'omitted'
-                #     print year,loc1,loc2,quality
-
-                    # # delete
-                    # yield_all = np.genfromtxt('yield_final_highquality.csv', delimiter=',')
-                    # key = np.array([year,loc1,loc2])
-                    # index = np.where(np.all(yield_all[:,0:3] == key, axis=1))
-                    # yield_all=np.delete(yield_all, index, axis=0)
-                    # np.savetxt("yield_final_highquality.csv", yield_all, delimiter=",")
-
-                    # continue
-
                 ## 1 save original file
-                filename=img_output_dir+str(year)+'_'+str(loc1)+'_'+str(loc2)+'.npy'
+                #filename=img_output_dir+str(year)+'_'+str(loc1)+'_'+str(loc2)+'.npy'
+                filename = bu.getFullPath((prefix, 'output_full', str(year)+'_'+str(loc1)+'_'+str(loc2)+'.npy'))
                 np.save(filename,MODIS_list_masked[i])
+                print datetime.datetime.now()
                 print filename,':written '
 
                 ## 2 save zoomed file (48*48)
                 zoom0 = float(48) / MODIS_list_masked[i].shape[0]
                 zoom1 = float(48) / MODIS_list_masked[i].shape[1]
                 output_image = zoom(MODIS_list_masked[i], (zoom0, zoom1, 1))
-
-                filename=img_zoom_output_dir+str(year)+'_'+str(loc1)+'_'+str(loc2)+'.npy'
+                filename = bu.getFullPath((prefix, 'output_zoom', str(year)+'_'+str(loc1)+'_'+str(loc2)+'.npy'))
+                #filename=img_zoom_output_dir+str(year)+'_'+str(loc1)+'_'+str(loc2)+'.npy'
                 np.save(filename,output_image)
+                print datetime.datetime.now()
                 print filename,':written '
-
+        bu.setBucketLocation('~/cs231n-satellite-images') # Return bucket path to original
 
                 
 
 if __name__ == "__main__":
+    bu.setBucketLocation('~/cs231n-satellite-images')
     # # save data
     MODIS_dir="/atlas/u/jiaxuan/data/google_drive/data_image_full"
-    for _, _, files in os.walk(MODIS_dir):
-        Parallel(n_jobs=12)(delayed(preprocess_save_data_parallel)(file) for file in files)
+    files = bu.walk('data', 'image_full')
+    Parallel(n_jobs=12)(delayed(preprocess_save_data_parallel)(file) for file in files)
+    #for _, _, files in os.walk(MODIS_dir):
+    #    Parallel(n_jobs=12)(delayed(preprocess_save_data_parallel)(file) for file in files)
 
     # # clean yield (low quality)
     # check_data_integrity_del()
