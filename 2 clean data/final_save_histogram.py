@@ -62,8 +62,14 @@ class fetch_data():
             filename = year + '_' + loc1 + '_' + loc2 + '.npy'
             print "Examining file: %s!" % filename
             try:
-                image_temp = np.load(self.dir + filename) # ?
-                image_temp = self.filter_timespan(image_temp, 49, 305, 9) # ?
+                # This is misleading - it's not just temperature bands - it's the
+                # entire multispectral image of depth 9 * times for a single
+                # year at a particular location.
+                image_temp = np.load(self.dir + filename)
+                # Filter the image depth to only have the selected days.
+                # Days 49-305 are shown here (9 bands each time), but in the paper,
+                # the researchers use 49-281.
+                image_temp = self.filter_timespan(image_temp, 49, 305, 9)
                 print datetime.datetime.now()
                 print image_temp.shape
 
