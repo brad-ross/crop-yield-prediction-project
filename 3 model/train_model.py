@@ -1,4 +1,5 @@
 from conv_net_model import *
+import os
 import logging
 
 if __name__ == "__main__":
@@ -8,10 +9,11 @@ if __name__ == "__main__":
 
     # Create a coordinator
     config = Config()
-    config.save_path = 'models/'
+    RUN_NAME = "run1__dropout-0.50" # DON'T FORGET TO CHANGE THIS!!!
+    config.save_path = os.path.expanduser('~/cs231n-satellite-images-models/' + RUN_NAME)
 
     # load data to memory
-    filename = '../../../cs231n-satellite-images-hist/data_output_full_histogram_all_full' + '.npz'
+    filename = os.path.expanduser('~/cs231n-satellite-images-hist/data_output_full_histogram_all_full' + '.npz')
     content = np.load(filename)
     image_all = content['output_image']
     yield_all = content['output_yield']
