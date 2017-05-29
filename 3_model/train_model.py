@@ -5,15 +5,15 @@ import logging
 if __name__ == "__main__":
     predict_year = 2013
 
-    logging.basicConfig(filename='train_for_hist_alldata'+str(predict_year)+'.log',level=logging.DEBUG)
+    logging.basicConfig(filename=os.path.expanduser('~/cs231n-satellite-images-models/run2__dropout-0.50__corn/internal'+str(predict_year)+'.log'),level=logging.DEBUG)
 
     # Create a coordinator
     config = Config()
-    RUN_NAME = "run1__dropout-0.50/" # DON'T FORGET TO CHANGE THIS!!!
+    RUN_NAME = "run2__dropout-0.50__corn/" # DON'T FORGET TO CHANGE THIS!!!
     config.save_path = os.path.expanduser('~/cs231n-satellite-images-models/' + RUN_NAME)
 
     # load data to memory
-    filename = os.path.expanduser('~/cs231n-satellite-images-hist/data_output_full_histogram_all_full' + '.npz')
+    filename = os.path.expanduser('~/cs231n-satellite-images-hist/data_corn' + '.npz')
     content = np.load(filename)
     image_all = content['output_image']
     yield_all = content['output_yield']
