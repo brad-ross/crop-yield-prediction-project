@@ -1,15 +1,16 @@
 from conv_net_model import *
 import os
 import logging
+import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
     predict_year = 2013
 
-    logging.basicConfig(filename=os.path.expanduser('~/cs231n-satellite-images-models/run2__dropout-0.50__corn/internal'+str(predict_year)+'.log'),level=logging.DEBUG)
+    logging.basicConfig(filename=os.path.expanduser('~/cs231n-satellite-images-models/run3__dropout-0.25__corn/internal'+str(predict_year)+'.log'),level=logging.DEBUG)
 
     # Create a coordinator
     config = Config()
-    RUN_NAME = "run2__dropout-0.50__corn/" # DON'T FORGET TO CHANGE THIS!!!
+    RUN_NAME = "run3__dropout-0.25__corn/" # DON'T FORGET TO CHANGE THIS!!!
     config.save_path = os.path.expanduser('~/cs231n-satellite-images-models/' + RUN_NAME)
 
     # load data to memory
