@@ -6,15 +6,15 @@ import matplotlib.pyplot as plt
 if __name__ == "__main__":
     predict_year = 2013
 
-    logging.basicConfig(filename=os.path.expanduser('~/cs231n-satellite-images-models/run3__dropout-0.25__corn/internal'+str(predict_year)+'.log'),level=logging.DEBUG)
+    logging.basicConfig(filename=os.path.expanduser('~/cs231n-satellite-images-models/run5__dropout-0.1__soybean/internal'+str(predict_year)+'.log'),level=logging.DEBUG)
 
     # Create a coordinator
     config = Config()
-    RUN_NAME = "run3__dropout-0.25__corn/" # DON'T FORGET TO CHANGE THIS!!!
+    RUN_NAME = "run5__dropout-0.1__soybean/" # DON'T FORGET TO CHANGE THIS!!!
     config.save_path = os.path.expanduser('~/cs231n-satellite-images-models/' + RUN_NAME)
 
     # load data to memory
-    filename = os.path.expanduser('~/cs231n-satellite-images-hist/data_corn' + '.npz')
+    filename = os.path.expanduser('~/cs231n-satellite-images-hist/data_soybean' + '.npz')
     content = np.load(filename)
     image_all = content['output_image']
     yield_all = content['output_yield']
