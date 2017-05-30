@@ -1,4 +1,4 @@
-from conv_net_model import *
+from conv_net_model_deep import *
 import os
 import logging
 import matplotlib.pyplot as plt
@@ -8,7 +8,7 @@ if __name__ == "__main__":
     
     # Create a coordinator
     config = Config()
-    RUN_NAME = "run5__dropout-0.1__soybean/" # DON'T FORGET TO CHANGE THIS!!!
+    RUN_NAME = "run6__deeper__soybean/" # DON'T FORGET TO CHANGE THIS!!!
     config.save_path = os.path.expanduser('~/cs231n-satellite-images-models/' + RUN_NAME)
 
     assert(len(os.listdir(config.save_path)) <= 1)
