@@ -1,6 +1,0 @@
-WARNING:tensorflow:From train_model.py:54: initialize_all_variables (from tensorflow.python.ops.variables) is deprecated and will be removed after 2017-03-02.
-Instructions for updating:
-Use `tf.global_variables_initializer` instead.
-INFO:root:predict year 2013 step 0 27442.429688 356672.281250 0.001000
-INFO:root:Validation set RMSE 150.454190 ME 149.704572 RMSE_min 100.000000
-INFO:root:save in file: /home/rusakgili/cs231n-satellite-images-models/run1__dropout-0.50/2013CNN_model.ckpt
