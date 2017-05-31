@@ -2,8 +2,6 @@ import tensorflow as tf
 import numpy as np
 import os
 
-MODEL_PATH = '~/models/run1__dropout-0.50'
-
 def load_model(sess, model_path, meta_graph):
     saver = tf.train.import_meta_graph(os.path.join(model_path, meta_graph))
     saver.restore(sess, tf.train.latest_checkpoint(os.path.expanduser(model_path)))
@@ -29,12 +27,8 @@ def compute_saliency_maps_for(hists, labels, model_path, meta_graph):
         norm_hist_grad = hist_grad_val / np.amax(hist_grad_val, axis=(1, 2, 3)).reshape((-1, 1, 1, 1))
         return norm_hist_grad, rmse
 
-def load_imgs_and_labels(data_path):
-    data = np.load(data_path)
-    return data['output_image'], data['output_yield'], data['output_locations']
-
 # Soybean Saliency Maps
-soy_data = np.load(os.path.expanduser('~/cs231n-satellite-images-hist/data_soybean.npz'))
+soy_data = np.load(os.path.expanduser('~/cs231n-satellite-images-hist/data_soybean_filtered.npz'))
 index_validate = np.nonzero(soy_data['output_year'] == 2013)[0]
 
 soy_sal_maps, soy_rmse = compute_saliency_maps_for(soy_data['output_image'][index_validate], soy_data['output_yield'][index_validate], os.path.expanduser('~/models/run0__dropout-0.25'), '2013CNN_model.ckpt.meta')
@@ -46,3 +40,7 @@ index_validate = np.nonzero(corn_data['output_year'] == 2013)[0]
 
 corn_sal_maps, corn_rmse = compute_saliency_maps_for(corn_data['output_image'][index_validate], corn_data['output_yield'][index_validate], os.path.expanduser('~/models/run3__dropout-0.25__corn'), '2013CNN_model.ckpt.meta')
 print(corn_sal_maps.shape, corn_rmse)
+
+# Comparing Soybean and Corn Saliency Maps
+diff_rmse = np.sqrt(np.mean(np.absolute(soy_sal_maps - corn_sal_maps)))
+print(diff_rmse)
