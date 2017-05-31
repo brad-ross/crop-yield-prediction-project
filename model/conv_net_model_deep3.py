@@ -52,10 +52,13 @@ class NeuralModel():
         
         self.conv1_1 = conv_relu_batch(self.x, 128, 3,1, name="conv1_1")
         conv1_1_d = tf.nn.dropout(self.conv1_1, self.keep_prob)
-        conv1_2 = conv_relu_batch(conv1_1_d, 128, 3,2, name="conv1_2")
+        conv1_2 = conv_relu_batch(conv1_1_d, 128, 3,1, name="conv1_2")
         conv1_2_d = tf.nn.dropout(conv1_2, self.keep_prob)
+	conv1_3 = conv_relu_batch(conv1_2_d, 128, 3,2, name="conv1_3")
+        conv1_3_d = tf.nn.dropout(conv1_3, self.keep_prob)
 
-        conv2_1 = conv_relu_batch(conv1_2_d, 256, 3,1, name="conv2_1")
+
+        conv2_1 = conv_relu_batch(conv1_3_d, 256, 3,1, name="conv2_1")
         conv2_1_d = tf.nn.dropout(conv2_1, self.keep_prob)
         conv2_2 = conv_relu_batch(conv2_1_d, 256, 3,1, name="conv2_2")
         conv2_2_d = tf.nn.dropout(conv2_2, self.keep_prob)
