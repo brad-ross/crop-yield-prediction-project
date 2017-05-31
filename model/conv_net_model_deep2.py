@@ -41,7 +41,7 @@ def batch_normalization(input_data, axes=[0], name="batch"):
     with tf.variable_scope(name):
         mean, variance = tf.nn.moments(input_data, axes, keep_dims=True, name="moments")
         return tf.nn.batch_normalization(input_data, mean, variance, None, None, 1e-6, name="batch")
-
+	#return tf.layers.batch_normalization(input_data, axis=axes[0],training=True)
 class NeuralModel():
     def __init__(self, config, name):
 
@@ -57,8 +57,10 @@ class NeuralModel():
 
         conv2_1 = conv_relu_batch(conv1_2_d, 256, 3,1, name="conv2_1")
         conv2_1_d = tf.nn.dropout(conv2_1, self.keep_prob)
-        conv2_2 = conv_relu_batch(conv2_1_d, 256, 3,2, name="conv2_2")
+        conv2_2 = conv_relu_batch(conv2_1_d, 256, 3,1, name="conv2_1")
         conv2_2_d = tf.nn.dropout(conv2_2, self.keep_prob)
+	conv2_3 = conv_relu_batch(conv2_2_d, 256, 3,2, name="conv2_2")
+        conv2_3_d = tf.nn.dropout(conv2_3, self.keep_prob)
 
         conv3_1 = conv_relu_batch(conv2_2_d, 512, 3,1, name="conv3_1")
         conv3_1_d = tf.nn.dropout(conv3_1, self.keep_prob)
