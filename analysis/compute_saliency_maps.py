@@ -34,7 +34,7 @@ def load_imgs_and_labels(data_path):
     return data['output_image'], data['output_yield'], data['output_locations']
 
 # Soybean Saliency Maps
-soy_data = np.load(os.path.expanduser('~/cs231n-satellite-images-hist/data_soybean.npz'))
+soy_data = np.load(os.path.expanduser('~/cs231n-satellite-images-hist/data_soybean_filtered.npz'))
 index_validate = np.nonzero(soy_data['output_year'] == 2013)[0]
 
 soy_sal_maps, soy_rmse = compute_saliency_maps_for(soy_data['output_image'][index_validate], soy_data['output_yield'][index_validate], os.path.expanduser('~/models/run0__dropout-0.25'), '2013CNN_model.ckpt.meta')
@@ -46,3 +46,7 @@ index_validate = np.nonzero(corn_data['output_year'] == 2013)[0]
 
 corn_sal_maps, corn_rmse = compute_saliency_maps_for(corn_data['output_image'][index_validate], corn_data['output_yield'][index_validate], os.path.expanduser('~/models/run3__dropout-0.25__corn'), '2013CNN_model.ckpt.meta')
 print(corn_sal_maps.shape, corn_rmse)
+
+# Comparing Soybean and Corn Saliency Maps
+diff_rmse = np.sqrt(np.mean(np.absolute(soy_sal_maps - corn_sal_maps)))
+print(diff_rmse)
