@@ -2,8 +2,6 @@ import tensorflow as tf
 import numpy as np
 import os
 
-MODEL_PATH = '~/models/run1__dropout-0.50'
-
 def load_model(sess, model_path, meta_graph):
     saver = tf.train.import_meta_graph(os.path.join(model_path, meta_graph))
     saver.restore(sess, tf.train.latest_checkpoint(os.path.expanduser(model_path)))
@@ -28,10 +26,6 @@ def compute_saliency_maps_for(hists, labels, model_path, meta_graph):
         rmse = np.sqrt(loss*2/hists.shape[0])
         norm_hist_grad = hist_grad_val / np.amax(hist_grad_val, axis=(1, 2, 3)).reshape((-1, 1, 1, 1))
         return norm_hist_grad, rmse
-
-def load_imgs_and_labels(data_path):
-    data = np.load(data_path)
-    return data['output_image'], data['output_yield'], data['output_locations']
 
 # Soybean Saliency Maps
 soy_data = np.load(os.path.expanduser('~/cs231n-satellite-images-hist/data_soybean_filtered.npz'))
