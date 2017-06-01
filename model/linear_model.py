@@ -7,7 +7,7 @@ class Config():
     lr = 1e-3
     weight_decay = 0.005
     # DISCREPANCY - paper uses 0.50 for dropout probability
-    drop_out = 0.25
+    drop_out = 1.0
 
 def conv2d(input_data, out_channels, filter_size,stride, in_channels=None, name="conv2d"):
     if not in_channels:
@@ -50,33 +50,10 @@ class NeuralModel():
         self.lr = tf.placeholder(tf.float32, [])
         self.keep_prob = tf.placeholder(tf.float32, [])
         
-        self.conv1_1 = conv_relu_batch(self.x, 128, 3,1, name="conv1_1")
-        conv1_1_d = tf.nn.dropout(self.conv1_1, self.keep_prob)
-        conv1_2 = conv_relu_batch(conv1_1_d, 128, 3,2, name="conv1_2")
-        conv1_2_d = tf.nn.dropout(conv1_2, self.keep_prob)
+        dim = np.prod(self.x.get_shape().as_list()[1:])
+        flattened = tf.reshape(self.x, [-1, dim])
 
-        conv2_1 = conv_relu_batch(conv1_2_d, 256, 3,1, name="conv2_1")
-        conv2_1_d = tf.nn.dropout(conv2_1, self.keep_prob)
-        conv2_2 = conv_relu_batch(conv2_1_d, 256, 3,1, name="conv2_2")
-        conv2_2_d = tf.nn.dropout(conv2_2, self.keep_prob)
-	conv2_3 = conv_relu_batch(conv2_2_d, 256, 3,2, name="conv2_3")
-        conv2_3_d = tf.nn.dropout(conv2_3, self.keep_prob)
-
-        conv3_1 = conv_relu_batch(conv2_3_d, 512, 3,1, name="conv3_1")
-        conv3_1_d = tf.nn.dropout(conv3_1, self.keep_prob)
-        conv3_2= conv_relu_batch(conv3_1_d, 512, 3,1, name="conv3_2")
-        conv3_2_d = tf.nn.dropout(conv3_2, self.keep_prob)
-        conv3_3 = conv_relu_batch(conv3_2_d, 512, 3,1, name="conv3_3")
-        conv3_3_d = tf.nn.dropout(conv3_3, self.keep_prob)
-	conv3_4 = conv_relu_batch(conv3_3_d, 512, 3,2, name="conv3_4")
-        conv3_4_d = tf.nn.dropout(conv3_4, self.keep_prob)
-
-
-        dim = np.prod(conv3_4_d.get_shape().as_list()[1:])
-        flattened = tf.reshape(conv3_4_d, [-1, dim])
-
-        self.fc6 = dense(flattened, 2048, name="fc6")
-        self.logits = tf.squeeze(dense(self.fc6, 1, name="dense"))
+        self.logits = tf.squeeze(dense(flattened, 1, name="dense"))
 
         # l2
         self.loss_err = tf.nn.l2_loss(self.logits - self.y)
@@ -85,10 +62,6 @@ class NeuralModel():
             scope.reuse_variables()
             self.dense_W = tf.get_variable('W')
             self.dense_B = tf.get_variable('b')
-        with tf.variable_scope('conv1_1/conv2d') as scope:
-            scope.reuse_variables()
-            self.conv_W = tf.get_variable('W')
-            self.conv_B = tf.get_variable('b')
 
         self.loss_reg = tf.add_n([tf.nn.l2_loss(v) for v in tf.trainable_variables()])
         self.loss = self.loss_err+self.loss_reg
