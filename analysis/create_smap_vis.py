@@ -35,11 +35,11 @@ def visualize_maps(loc1, loc2, time, band): # loc1 is state, loc2 is county
     vis_soy = bk.back_out_single(image_slice, dhist_soy)
     
     # Normalize the gradients based on the maximum and minimum values in BOTH maps
-    min_val = min(np.min(vis_corn), np.min(vis_soy))
-    max_val = max(np.max(vis_corn), np.max(vis_soy))
-    val_range = [min_val, max_val]
-    vis_corn_n = bk.freq_to_intens(val_range, vis_corn).astype(np.uint8)
-    vis_soy_n = bk.freq_to_intens(val_range, vis_soy).astype(np.uint8)
+    # min_val = min(np.min(vis_corn), np.min(vis_soy))
+    # max_val = max(np.max(vis_corn), np.max(vis_soy))
+    # val_range = [min_val, max_val]
+    vis_corn_n = bk.freq_to_intens(dhist_corn, vis_corn).astype(np.uint8)
+    vis_soy_n = bk.freq_to_intens(dhist_soy, vis_soy).astype(np.uint8)
     np.savez('smap_vis_2013_%d_%d_t%d_b%d.npz' % (loc1, loc2, time, band),
              vis_corn=vis_corn,
              vis_corn_n=vis_corn_n,
