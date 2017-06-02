@@ -7,7 +7,7 @@ import sys
 
 outpath = os.path.expanduser(sys.argv[1])
 
-def gather_stats(pathname, outpath, MAX_FILES=1000):
+def gather_stats(pathname, outpath, MAX_FILES=5):
     num_files = 0
     IMAGE_PATH = os.path.expanduser(pathname)
     heights = []
@@ -15,6 +15,7 @@ def gather_stats(pathname, outpath, MAX_FILES=1000):
     depths = []
     aspect_ratios = []
     prop_nonzero_pixels = []
+    sizes = []
     with open(os.path.expanduser('~/crop-yield-prediction-project/analysis/clean_filenames')) as f:
         filenames = f.readlines()
     if len(filenames) > MAX_FILES:
@@ -34,12 +35,14 @@ def gather_stats(pathname, outpath, MAX_FILES=1000):
             num_nonzero_pixels = np.sum(arr > 0)
             prop_nonzero_pixels.append(num_nonzero_pixels / (float(arr.shape[0])* arr.shape[1]*arr.shape[2]))
             depths.append(arr.shape[2])
+            sizes.append(os.path.getsize(os.path.join(IMAGE_PATH, filename)))
         np.savez(outpath,
                  heights=np.array(heights),
                  widths=np.array(widths),
                  depths=np.array(depths),
                  aspect_ratios=np.array(aspect_ratios),
-                 prop_nonzero_pixels=np.array(prop_nonzero_pixels))
+                 prop_nonzero_pixels=np.array(prop_nonzero_pixels),
+                 sizes=np.array(sizes))
             
 
 gather_stats('~/cs231n-satellite-images-clean', outpath)
