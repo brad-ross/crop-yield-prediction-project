@@ -26,10 +26,10 @@ def back_out_single(img, dhist, bin_seq=None):
     for i in range(len(bin_seq) - 1):
         start, end = bin_seq[i], bin_seq[i + 1]
         if i != len(bin_seq) - 2: # not the last bucket
-            out[(start <= img) * (img < end)] = freq_to_intens(dhist, dhist[i])
+            out[(start <= img) * (img < end)] = dhist[i]
         else: # last bucket, <= vs <
-            out[(start <= img) * (img <= end)] = freq_to_intens(dhist, dhist[i])
-    return out.astype(np.uint8)
+            out[(start <= img) * (img <= end)] = dhist[i]
+    return out
 
 def back_out_multiple(imgs, dhists, bin_seq=None):
     """
