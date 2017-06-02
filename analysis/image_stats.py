@@ -6,8 +6,9 @@ import sys
 # randomly select 1000 files.
 
 outpath = os.path.expanduser(sys.argv[1])
+MAX_FILES = int(sys.argv[2]) if len(sys.argv) > 2 else 1000000
 
-def gather_stats(pathname, outpath, MAX_FILES=5):
+def gather_stats(pathname, outpath, MAX_FILES):
     num_files = 0
     IMAGE_PATH = os.path.expanduser(pathname)
     heights = []
@@ -45,4 +46,4 @@ def gather_stats(pathname, outpath, MAX_FILES=5):
                  sizes=np.array(sizes))
             
 
-gather_stats('~/cs231n-satellite-images-clean', outpath)
+gather_stats('~/cs231n-satellite-images-clean', outpath, MAX_FILES)
