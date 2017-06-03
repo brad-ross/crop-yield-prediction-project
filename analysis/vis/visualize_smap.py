@@ -7,8 +7,8 @@ FILE_PATH = os.path.expanduser(sys.argv[1])
 vis = np.load(FILE_PATH)
 f, axarr = plt.subplots(1, 2)
 
-START_TIME, END_TIME = 16, 31
-START_BAND, END_BAND = 7, 8
+START_TIME, END_TIME = 31, 31
+START_BAND, END_BAND = 8, 8
 
 def assemble_all_vis(fmt_str):
     first_elt = vis[fmt_str % (0,0)]
