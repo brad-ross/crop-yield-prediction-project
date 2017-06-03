@@ -1,23 +1,16 @@
-from conv_net_model_important_counties import *
+from conv_net_model_deep2 import *
 import os
 import logging
 import matplotlib.pyplot as plt
-import sys
 
 if __name__ == "__main__":
     predict_year = 2013
-    print "hi"    
-    if len(sys.argv) < 2:
-        print("Usage: python train_model_important_counties.py [output_file] [out_path] [title [max_val [x_scale]?]?]?")
-    else:
-        RUN_NAME = sys.argv[1]    
-
+    
     # Create a coordinator
     config = Config()
-    #RUN_NAME = "important_counties/" # DON'T FORGET TO CHANGE THIS!!!
-    config.save_path = os.path.expanduser('~/cs231n-satellite-images-models/runs/' + RUN_NAME + '/important_counties')
-    print config.save_path
-    assert(false)
+    RUN_NAME = "run7__deeper2__soybean/important_counties" # DON'T FORGET TO CHANGE THIS!!!
+    config.save_path = os.path.expanduser('~/cs231n-satellite-images-models/runs/' + RUN_NAME)
+
     assert(len(os.listdir(config.save_path)) <= 1)
     logging.basicConfig(filename=os.path.join(config.save_path, str(predict_year)+'.log'),level=logging.DEBUG)
 

@@ -14,11 +14,9 @@ if __name__ == "__main__":
 
     # Create a coordinator
     config = Config()
-    #RUN_NAME = "important_counties/" # DON'T FORGET TO CHANGE THIS!!!
+    RUN_NAME = "run5__dropout-0.1__soybean" # DON'T FORGET TO CHANGE THIS!!!
     config.save_path = os.path.expanduser('~/cs231n-satellite-images-models/runs/' + RUN_NAME + '/important_counties')
     print config.save_path
-    assert(false)
-    assert(len(os.listdir(config.save_path)) <= 1)
     logging.basicConfig(filename=os.path.join(config.save_path, str(predict_year)+'.log'),level=logging.DEBUG)
 
     

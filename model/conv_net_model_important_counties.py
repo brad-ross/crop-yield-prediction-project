@@ -7,7 +7,7 @@ class Config():
     lr = 1e-3
     weight_decay = 0.005
     # DISCREPANCY - paper uses 0.50 for keep probability
-    drop_out = 0.25
+    drop_out = 0.1
 
 def conv2d(input_data, out_channels, filter_size,stride, in_channels=None, name="conv2d"):
     if not in_channels:
