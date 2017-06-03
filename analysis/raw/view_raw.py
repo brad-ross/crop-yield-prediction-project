@@ -24,5 +24,5 @@ for t in range(NUM_TIMES):
         print 'On time %d.' % t
     for b in range(NUM_BANDS):
         raw_arr_slice = raw_arr_year[7*t+b]
-        entries['raw_%d_t%d_b_%d' % (year, time, band)] = raw_arr_slice
+        entries['raw_%d_t%d_b%d' % (year, time, band)] = raw_arr_slice
 np.savez('raw_%d_%d_%d.npz' % (year, loc1, loc2), **entries)
