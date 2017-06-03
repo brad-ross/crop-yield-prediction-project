@@ -52,7 +52,7 @@ def create_single_vis(loc1, loc2, time, band): # loc1 is state, loc2 is county
     vis_corn_n = bk.freq_to_intens(val_range, vis_corn).astype(np.uint8)
     vis_soy_n = bk.freq_to_intens(val_range, vis_soy).astype(np.uint8)
     
-    return (vis_corn, vis_corn_n, vis_soy, vis_soy_n)
+    return (vis_corn, vis_corn_n, vis_soy, vis_soy_n, image_slice)
 
 def create_all_vis(loc1, loc2):
     NUM_TIMES = 32
@@ -69,11 +69,12 @@ def package_all_vis(loc1, loc2, vis_thingy): # Need to pass in loc1, loc2 to lab
     entries['loc'] = np.array([loc1, loc2])
     assert(len(vis_thingy) == 288)
     for i, vis_tuple in enumerate(vis_thingy):
-        vis_corn, vis_corn_n, vis_soy, vis_soy_n = vis_tuple
+        vis_corn, vis_corn_n, vis_soy, vis_soy_n, image_slice = vis_tuple
         entries['vis_corn_t%d_b%d' % (i / 9, i % 9)] = vis_corn
         entries['vis_corn_n_t%d_b%d' % (i / 9, i % 9)] = vis_corn_n
         entries['vis_soy_t%d_b%d' % (i / 9, i % 9)] = vis_soy
         entries['vis_soy_n_t%d_b%d' % (i / 9, i % 9)] = vis_soy_n
+        entries['raw_t%d_b%d' % (i / 9, i % 9)] = image_slice
     np.savez('smap_vis_2013_%d_%d.npz' % (loc1, loc2), **entries)
 
 def create_sample_vis(time, band, num=100):
@@ -93,11 +94,12 @@ def package_sample_vis(time, band, selected_indices, vis_thingy2):
     entries['indices'] = selected_indices
     assert(len(vis_thingy2) == selected_indices.shape[0])
     for i, vis_tuple in enumerate(vis_thingy2):
-        vis_corn, vis_corn_n, vis_soy, vis_soy_n = vis_tuple
+        vis_corn, vis_corn_n, vis_soy, vis_soy_n, image_slice = vis_tuple
         entries['vis_corn_%d_%d' % (selected_indices[i,0], selected_indices[i,1])] = vis_corn
         entries['vis_corn_n_%d_%d' % (selected_indices[i,0], selected_indices[i,1])] = vis_corn_n
         entries['vis_soy_%d_%d' % (selected_indices[i,0], selected_indices[i,1])] = vis_soy
         entries['vis_soy_n_%d_%d' % (selected_indices[i,0], selected_indices[i,1])] = vis_soy_n
+        entries['raw_%d_%d' % (selected_indices[i,0], selected_indices[i,1])] = image_slice
     np.savez('smap_vis_2013_t%d_b%d.npz' % (time, band), **entries)
 
 if sys.argv[1] == '-a':
