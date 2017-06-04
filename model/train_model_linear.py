@@ -94,7 +94,7 @@ if __name__ == "__main__":
                 })
 
             if i%200 == 0:
-                val_loss,fc6,W,B = sess.run([model.loss_err,model.fc6,model.dense_W,model.dense_B], feed_dict={
+                val_loss = sess.run(model.loss_err, feed_dict={
                     model.x: image_all[index_validate_batch, :, 0:config.H, :],
                     model.y: yield_all[index_validate_batch],
                     model.keep_prob: 1
@@ -146,13 +146,12 @@ if __name__ == "__main__":
         # save result
         pred_out = []
         real_out = []
-        feature_out = []
         year_out = []
         locations_out =[]
         index_out = []
         for i in range(image_all.shape[0] / config.B):
-            feature,pred = sess.run(
-                [model.fc6,model.logits], feed_dict={
+            pred = sess.run(
+                model.logits, feed_dict={
                 model.x: image_all[i * config.B:(i + 1) * config.B,:,0:config.H,:],
                 model.y: yield_all[i * config.B:(i + 1) * config.B],
                 model.keep_prob:1
@@ -161,7 +160,6 @@ if __name__ == "__main__":
 
             pred_out.append(pred)
             real_out.append(real)
-            feature_out.append(feature)
             year_out.append(year_all[i * config.B:(i + 1) * config.B])
             locations_out.append(locations_all[i * config.B:(i + 1) * config.B])
             index_out.append(index_all[i * config.B:(i + 1) * config.B])
@@ -176,14 +174,13 @@ if __name__ == "__main__":
         print pred_out
         pred_out=np.concatenate(pred_out)
         real_out=np.concatenate(real_out)
-        feature_out=np.concatenate(feature_out)
         year_out=np.concatenate(year_out)
         locations_out=np.concatenate(locations_out)
         index_out=np.concatenate(index_out)
         
         path = config.save_path + str(predict_year)+'result_prediction.npz'
         np.savez(path,
-            pred_out=pred_out,real_out=real_out,feature_out=feature_out,
+            pred_out=pred_out,real_out=real_out,
             year_out=year_out,locations_out=locations_out,weight_out=weight_out,b_out=b_out,index_out=index_out)
 
         np.savez(config.save_path+str(predict_year)+'result.npz',
