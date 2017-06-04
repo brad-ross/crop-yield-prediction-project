@@ -53,4 +53,4 @@ print(corn_sal_maps.shape, corn_rmse)
 
 # Saving Saliency Maps
 output_path = os.path.expanduser('~/cs231n-satellite-images-models/saliency_maps/original_model_comparison_imp_count.npz')
-np.savez(output_path, soy_maps=soy_sal_maps, corn_maps=corn_sal_maps, index=soy_data['output_index'])
+np.savez(output_path, soy_maps=soy_sal_maps, corn_maps=corn_sal_maps, index=soy_data['output_index'][index_validate])

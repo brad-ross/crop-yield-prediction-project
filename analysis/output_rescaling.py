@@ -51,3 +51,6 @@ std_soy_preds = (soy_preds_w_corn_mod - np.mean(corn_yield))/np.std(corn_yield)
 unstd_soy_preds = std_soy_preds * np.std(soy_yield) + np.mean(soy_yield)
 soy_rmse = np.sqrt(np.mean((unstd_soy_preds - soy_yield)**2))
 print(soy_rmse)
+
+# writing out rescaled predictions
+np.savez(os.path.expanduser('~/cs231n-satellite-images-models/output_rescaling/original_model_rescaled_oututs.npz'), soy_preds=soy_preds_w_corn_mod, corn_preds=corn_preds_w_soy_mod, locs=soy_data['output_index'][index_validate])
