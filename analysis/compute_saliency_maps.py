@@ -38,9 +38,8 @@ hist_sums = np.sum(soy_data['output_image'],axis=(1,2,3))
 nonbroken_rows = hist_sums > 287
 imp_rows = pd.DataFrame(soy_data['output_index'])[0].isin(states_to_keep)
 val_year_rows = soy_data['output_year'] == VAL_YEAR
-print(np.sum(val_year_rows))
 index_validate = np.logical_and.reduce((nonbroken_rows, imp_rows, val_year_rows))
-print(np.sum(index_validate))
+
 soy_model_path = os.path.expanduser('~/models/run1__dropout_0.50__soybean')
 soy_sal_maps, soy_rmse = compute_saliency_maps_for(soy_data['output_image'][index_validate], soy_data['output_yield'][index_validate], soy_model_path, '2013CNN_model.ckpt.meta')
 print(soy_sal_maps.shape, soy_rmse)
