@@ -7,7 +7,7 @@ import datetime
 class fetch_data():
     def __init__(self):
         self.dir = os.path.expanduser('~/cs231n-satellite-images-clean') + '/data_output_full_'
-        self.outputdir = os.path.expanduser('~/cs231n-satellite-images-hist') + '/data_output_full_'
+        self.outputdir = os.path.expanduser('~/cs231n-satellite-images-hist') + '/data_output_full64_'
 
         # load yield data
         self.data_yield = np.genfromtxt('yield_final_highquality.csv', delimiter=',')
@@ -36,7 +36,7 @@ class fetch_data():
         return hist
 
     def save_data(self):
-        output_image = np.zeros([self.index_all.shape[0], 32, 32, 9])
+        output_image = np.zeros([self.index_all.shape[0], 64, 32, 9])
         output_yield = np.zeros([self.index_all.shape[0]])
         output_year = np.zeros([self.index_all.shape[0]])
         output_locations = np.zeros([self.index_all.shape[0],2])
@@ -73,8 +73,8 @@ class fetch_data():
                 print datetime.datetime.now()
                 print image_temp.shape
 
-                bin_seq = np.linspace(1, 4999, 33)
-                image_temp = self.calc_histogram(image_temp, bin_seq ,32, 32, 9) # ?
+                bin_seq = np.linspace(1, 4999, 65)
+                image_temp = self.calc_histogram(image_temp, bin_seq ,64, 32, 9) # ?
                 image_temp[np.isnan(image_temp)] = 0
                 if np.sum(image_temp) < 250:
                     print 'broken image', filename
