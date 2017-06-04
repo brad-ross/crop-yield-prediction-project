@@ -7,8 +7,6 @@ import gdal
 loc1 = int(sys.argv[1])
 loc2 = int(sys.argv[2])
 year = int(sys.argv[3])
-time = int(sys.argv[4]) # MAX 32
-band = int(sys.argv[5]) # HAS TO BE 0-6 inclusive!
 
 RAW_PATH = os.path.expanduser('~/cs231n-satellite-images/data_image_full_%d_%d.tif' % (loc1, loc2))
 raw_arr = np.array(gdal.Open(RAW_PATH).ReadAsArray(), dtype='uint16')
