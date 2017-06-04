@@ -12,14 +12,25 @@ if len(sys.argv) == 1:
     
 assert(sys.argv[1] == '-a' or sys.argv[1] == '-s')
     
-MAP_PATH = os.path.expanduser('~/cs231n-satellite-images-models/saliency_maps/original_model_comparison.npz')
+MAP_PATH = os.path.expanduser('~/cs231n-satellite-images-models/saliency_maps/original_model_comparison_imp_count.npz')
 REF_PATH = os.path.expanduser('~/cs231n-satellite-images-hist/data_soybean_filtered.npz')
 
 maps = np.load(MAP_PATH)
 ref = np.load(REF_PATH)
-indices = ref['output_index'][ref['output_year'] == 2013]
+#indices = ref['output_index'][ref['output_year'] == 2013]
+#important_counties = [5, 17, 18, 19, 20, 27, 29, 31, 38, 39, 46]
+#imp_indices = []
+#for row in indices:
+#    if row[0] in important_counties:
+#        imp_indices.append(row)
+#indices = np.stack(imp_indices, axis=0)
+indices = np.load('../unbroken_index.npy')
 corn_maps = maps['corn_maps']
 soy_maps = maps['soy_maps']
+print corn_maps.shape
+print indices.shape
+assert(corn_maps.shape[0] == indices.shape[0])
+assert(soy_maps.shape[0] == indices.shape[0])
 global_min = min(np.min(corn_maps), np.min(soy_maps))
 global_max = max(np.max(corn_maps), np.max(soy_maps))
 val_range = [global_min, global_max]
@@ -75,7 +86,7 @@ def package_all_vis(loc1, loc2, vis_thingy): # Need to pass in loc1, loc2 to lab
         entries['vis_soy_t%d_b%d' % (i / 9, i % 9)] = vis_soy
         entries['vis_soy_n_t%d_b%d' % (i / 9, i % 9)] = vis_soy_n
         entries['raw_t%d_b%d' % (i / 9, i % 9)] = image_slice
-    np.savez('smap_vis_2013_%d_%d.npz' % (loc1, loc2), **entries)
+    np.savez('smap_vis_2013_%d_%d_ic.npz' % (loc1, loc2), **entries)
 
 def create_sample_vis(time, band, num=100):
     global indices
@@ -100,7 +111,7 @@ def package_sample_vis(time, band, selected_indices, vis_thingy2):
         entries['vis_soy_%d_%d' % (selected_indices[i,0], selected_indices[i,1])] = vis_soy
         entries['vis_soy_n_%d_%d' % (selected_indices[i,0], selected_indices[i,1])] = vis_soy_n
         entries['raw_%d_%d' % (selected_indices[i,0], selected_indices[i,1])] = image_slice
-    np.savez('smap_vis_2013_t%d_b%d.npz' % (time, band), **entries)
+    np.savez('smap_vis_2013_t%d_b%d_ic.npz' % (time, band), **entries)
 
 if sys.argv[1] == '-a':
     loc1 = int(sys.argv[2])
