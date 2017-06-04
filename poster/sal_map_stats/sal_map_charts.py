@@ -30,7 +30,7 @@ ax.xaxis.set_major_formatter(mdates.DateFormatter('%b, \'%y'))
 ax.set_xlim(datetime.date(YEAR, 1, 1), datetime.date(YEAR, 12, 31))
 ax.set_xlabel('Time of Year', fontsize=24)
 ax.set_ylabel('Average L2/L1 Difference', fontsize=24)
-ax.set_title('Relative Importance of Photos Taken Over Time')
+ax.set_title('Relative Importance of Photos Taken Over Time', fontsize=26)
 ax.legend()
 plt.show()
 
