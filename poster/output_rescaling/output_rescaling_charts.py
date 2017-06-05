@@ -16,7 +16,7 @@ plt.hist(scaled_corn_preds, bins=30, alpha=0.75, color=PLOT_COLORS[1], label='Co
 plt.hist(orig_corn_yield, bins=30, alpha=0.75, color=PLOT_COLORS[2], label='Corn Yields')
 plt.hist(scaled_soy_preds, bins=30, alpha=0.75, color=PLOT_COLORS[3], label='Soybean -> Corn Preds')
 
-plt.legend()
+#plt.legend()
 plt.xlabel('Yield Value', fontsize=24)
 plt.ylabel('Frequency of Yield Value', fontsize=24)
 plt.show()
