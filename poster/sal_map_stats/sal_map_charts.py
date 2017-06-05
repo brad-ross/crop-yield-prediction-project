@@ -32,7 +32,7 @@ ax.xaxis.set_major_formatter(mdates.DateFormatter('%b, \'%y'))
 ax.set_xlim(datetime.date(YEAR, 1, 1), datetime.date(YEAR, 12, 31))
 ax.set_xlabel('Time of Year', fontsize=24)
 ax.set_ylabel('Average L2/L1 Difference', fontsize=24)
-ax.legend()
+ax.legend(prop={'size':22})
 plt.show()
 
 # Relative Importance of Bands
@@ -43,12 +43,5 @@ plt.bar(bands + bar_width, l1_dist(soy_maps, corn_maps, axis=(0,1,2)), bar_width
 plt.xlim(1,9)
 plt.xlabel('Band', fontsize=24)
 plt.ylabel('Average L2/L1 Difference', fontsize=24)
-plt.legend()
-plt.show()
-
-plt.bar(np.arange(soy_maps.shape[1]), l2_dist(soy_maps, corn_maps, axis=(0,2,3)), color=PLOT_COLORS[0], alpha=0.75)
-plt.show()
-
-plt.hist(l2_dist(soy_maps, corn_maps, axis=(1,2,3)), bins=30, color=PLOT_COLORS[2], alpha=0.75)
-plt.hist(l1_dist(soy_maps, corn_maps, axis=(1,2,3)), bins=30, color=PLOT_COLORS[3], alpha=0.75)
+plt.legend(prop={'size':24})
 plt.show()
