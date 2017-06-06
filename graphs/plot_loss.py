@@ -8,8 +8,8 @@ def plot_loss(filename, out_path, plot_title, max_val, x_scale):
     eval_loss = np.fmin(result['summary_eval_loss'], max_val)
     max_x = min(train_loss.shape[0], eval_loss.shape[0])
     x = np.array(range(max_x)) * x_scale
-    t_line, = plt.plot(x, train_loss, label='Training Loss')
-    v_line, = plt.plot(x, eval_loss, label='Validation Loss')
+    t_line, = plt.plot(x, train_loss, 'o', label='Training Loss')
+    v_line, = plt.plot(x, eval_loss, 'o', label='Validation Loss')
     plt.legend((t_line, v_line), ('Training Loss', 'Validation Loss'))
     plt.xlabel('Iteration')
     plt.ylabel('Loss')
